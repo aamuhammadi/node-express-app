@@ -1,5 +1,5 @@
 const DB_NAME = "expressjs-training-db";
-const DB = `mongodb+srv://aamconsultants:aamconsultants@cluster0.e91afdv.mongodb.net/`;
+const DB = `mongodb://127.0.0.1:27017/${DB_NAME}`;
 const PORT = 8080;
 
 module.exports = {
