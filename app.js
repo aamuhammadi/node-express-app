@@ -1,6 +1,7 @@
 const express = require("express");
 const appRoutes = require("./src/routes/website");
 const userRoutes = require("./src/routes/user");
+const cors = require("cors");
 
 const connectDB = require("./src/config/db");
 const { PORT } = require("./src/config/env");
@@ -9,7 +10,9 @@ const app = express();
 connectDB();
 
 const port = PORT || 8080;
+
 app.use(express.json());
+app.use(cors());
 
 app.use(appRoutes);
 app.use("/api/user", userRoutes);
