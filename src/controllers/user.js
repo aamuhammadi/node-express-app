@@ -37,7 +37,6 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
-
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -60,9 +59,34 @@ exports.login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res
-      .status(200)
-      .json({ message: "Sign in successful", user: user, token: token });
+    const { password: userPassword, ...userWithoutPassword } = user._doc;
+
+    res.status(200).json({
+      message: "Sign in successful",
+      user: userWithoutPassword,
+      token: token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+exports.getUserInfo = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...userWithoutPassword } = user._doc;
+
+    res.status(200).json({
+      message: "User information retrieved",
+      user: userWithoutPassword,
+    });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
