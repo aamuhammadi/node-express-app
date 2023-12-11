@@ -94,7 +94,7 @@ exports.getUserInfo = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const userId = req.user._id;
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, phone, address } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -106,6 +106,8 @@ exports.updateUser = async (req, res) => {
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.address = address || user.address;
 
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
