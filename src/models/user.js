@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   address: String,
+  userType: {
+    type: String,
+    default: "user",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -126,3 +126,50 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (user.userType !== "admin") {
+      return res
+        .status(403)
+        .json({ error: "Permission denied. Only admin can access this." });
+    }
+
+    const users = await User.find({ userType: "user" });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Somethig went wrong" });
+  }
+};
+
+exports.deleteUserById = async (req, res) => {
+  try {
+    const adminUserId = req.user._id;
+    const { userId } = req.params;
+
+    const adminUser = await User.findById(adminUserId);
+    if (adminUser.userType !== "admin") {
+      return res
+        .status(403)
+        .json({ error: "Permission denied. Only admin can access this." });
+    }
+
+    const userToDelete = await User.findById(userId);
+    if (!userToDelete) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: "User deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+};
