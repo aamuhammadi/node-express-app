@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const attachmentSchema = new mongoose.Schema({
+  filename: String,
+  filePath: String,
+});
+
 const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
@@ -17,6 +22,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  profileImage: [attachmentSchema],
 });
 
 module.exports = mongoose.model("User", userSchema);
