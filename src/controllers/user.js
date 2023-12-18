@@ -187,3 +187,54 @@ exports.deleteUserById = async (req, res) => {
     res.status(500).json({ error: "Something went wrong." });
   }
 };
+
+exports.attachments = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (req.files.length === 0) {
+      return res.status(400).json({ error: "Please attach files" });
+    }
+
+    if (req.files && req.files.length > 5) {
+      return res
+        .status(400)
+        .json({ error: "Maximum 5 files allowed per request" });
+    }
+
+    if (req.files) {
+      const totalFileSize = req.files.reduce((acc, file) => acc + file.size, 0);
+      if (totalFileSize > 50 * 1024 * 1024) {
+        return res
+          .status(400)
+          .json({ error: "Maximum total file size is 50MB" });
+      }
+    }
+
+    const attachments = req.files;
+
+    const processFiles = async (files, attachmentArray) => {
+      if (files) {
+        files.forEach((file) => {
+          attachmentArray.push({
+            filename: file.originalname,
+            filePath: file.path,
+          });
+        });
+      }
+    };
+
+    await processFiles(attachments, user.attachments);
+
+    await user.save();
+
+    const userAttachments = user.attachments;
+
+    return res.status(201).json(userAttachments);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Something Went Wrong!" });
+  }
+};

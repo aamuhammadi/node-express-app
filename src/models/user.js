@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     default: "user",
   },
   profileImage: attachmentSchema,
+  attachments: [attachmentSchema],
 });
 
 module.exports = mongoose.model("User", userSchema);

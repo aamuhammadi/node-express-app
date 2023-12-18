@@ -15,6 +15,12 @@ router.put(
   upload.single("attachments"),
   userController.updateUser
 );
+router.put(
+  "/attachments",
+  protect,
+  upload.array("attachments"),
+  userController.attachments
+);
 router.delete("/:userId", protect, userController.deleteUserById);
 
 module.exports = router;
