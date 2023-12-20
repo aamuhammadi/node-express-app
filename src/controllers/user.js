@@ -2,6 +2,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config/env");
+const path = require("path");
+const fs = require("fs");
 
 exports.register = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -236,5 +238,33 @@ exports.attachments = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Something Went Wrong!" });
+  }
+};
+
+exports.downloadAttachment = async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const attachmentsType = req.params.attachmentsType;
+
+    const attachmentDirectory = path.join(
+      __dirname,
+      `../data/${attachmentsType}`
+    );
+
+    const filePath = path.join(attachmentDirectory, filename);
+
+    if (fs.existsSync(filePath)) {
+      res.download(filePath, (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: "Something went wrong" });
+        }
+      });
+    } else {
+      return res.status(404).json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };

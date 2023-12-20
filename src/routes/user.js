@@ -21,6 +21,11 @@ router.put(
   upload.array("attachments"),
   userController.attachments
 );
+router.get(
+  "/download/:attachmentsType/:filename",
+  protect,
+  userController.downloadAttachment
+);
 router.delete("/:userId", protect, userController.deleteUserById);
 
 module.exports = router;
