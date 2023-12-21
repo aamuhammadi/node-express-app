@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config/env");
 const path = require("path");
 const fs = require("fs");
+const { getIo } = require("../utils/socket");
 
 exports.register = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -233,6 +234,9 @@ exports.attachments = async (req, res) => {
     await user.save();
 
     const userAttachments = user.attachments;
+
+    const io = getIo();
+    io.emit("userAttachments", { attachments: userAttachments });
 
     return res.status(201).json(userAttachments);
   } catch (error) {

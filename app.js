@@ -3,6 +3,7 @@ const appRoutes = require("./src/routes/website");
 const userRoutes = require("./src/routes/user");
 const cors = require("cors");
 const path = require("path");
+const socket = require("./src/utils/socket");
 
 const connectDB = require("./src/config/db");
 const { PORT } = require("./src/config/env");
@@ -23,7 +24,11 @@ app.use((req, res) => {
   res.status(404).send(`<h1>404 - Page Not Found</h1>`);
 });
 
-app.listen(port, (err) => {
+const server = app.listen(port, (err) => {
   if (err) console.log("!🚨 ERROR ==>", err);
   console.log(`🚀 listening at port ${port}`);
 });
+
+const io = socket.init(server);
+
+io.on("connection", (socket) => {});
