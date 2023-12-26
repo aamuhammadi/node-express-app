@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to AAMAX</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background-color: #f8931f;
+        color: #ffffff;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .cta-button {
+        display: inline-block;
+        font-size: 16px;
+        padding: 10px 20px;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #ffffff !important;
+        background-color: #0071bd;
+        border-radius: 5px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+        text-align: center;
+      }
+
+      .footer a {
+        color: #0071bd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Welcome to AAMAX</h1>
+      </div>
+      <div class="content">
+        <p>Hey {{USERNAME}},</p>
+        <p>We would like to thank you for creating an account with us.</p>
+        <p>From your account you'll be able to:</p>
+        <ul>
+          <li>Place orders quickly and easily</li>
+          <li>Manage orders efficiently</li>
+          <li>Communicate directly with the team working on your project</li>
+          <li>View and Download Invoices</li>
+        </ul>
+        <p>Click the button below to place your first order and get started:</p>
+        <a href="{{ORDER_LINK}}" class="cta-button">Place Your First Order</a>
+        <p>
+          If you have any questions, feel free to contact our support team via
+          the <a href="{{SUPPORT_LINK}}">AAMAX app dashboard</a>.
+        </p>
+      </div>
+      <div class="footer">
+        <p>Best Regards,<br />AAMAX</p>
+      </div>
+    </div>
+  </body>
+</html>
