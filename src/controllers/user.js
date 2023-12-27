@@ -5,10 +5,6 @@ const { SECRET_KEY } = require("../config/env");
 const path = require("path");
 const fs = require("fs");
 const { getIo } = require("../utils/socket");
-const { MJ_APIKEY_PUBLIC, MJ_APIKEY_PRIVATE } = require("../config/env");
-
-const Mailjet = require("node-mailjet");
-const mailjet = Mailjet.apiConnect(MJ_APIKEY_PUBLIC, MJ_APIKEY_PRIVATE);
 
 exports.register = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -37,39 +33,6 @@ exports.register = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-
-    const templatePath = path.join(
-      __dirname,
-      "../utils/welcomeEmailTempl.html"
-    );
-    const welcomeEmailHTML = fs.readFileSync(templatePath, "utf-8");
-
-    const dynamicHTML = welcomeEmailHTML
-      .replace(/{{USERNAME}}/g, `${firstName} ${lastName}`)
-      .replace(/{{ORDER_LINK}}/g, `http://localhost:3000`)
-      .replace(/{{SUPPORT_LINK}}/g, "http://localhost:3000");
-
-    const request = mailjet.post("send", { version: "v3.1" }).request({
-      Messages: [
-        {
-          From: {
-            Email: "support@aamax.co",
-            Name: "AAMAX",
-          },
-          To: [
-            {
-              Email: email,
-              Name: `${firstName} ${lastName}`,
-            },
-          ],
-          Subject: `${firstName}, Welcome to AAMAX`,
-          TextPart: `Asslamu alaikum`,
-          HTMLPart: dynamicHTML,
-        },
-      ],
-    });
-
-    request;
 
     res
       .status(201)
