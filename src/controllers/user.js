@@ -147,6 +147,7 @@ exports.updateUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
+    const { currentPage, pageSize } = req.query;
     const userId = req.user._id;
 
     const user = await User.findById(userId);
@@ -157,12 +158,32 @@ exports.getAllUsers = async (req, res) => {
         .json({ error: "Permission denied. Only admin can access this." });
     }
 
-    const users = await User.find({ userType: "user" });
+    const uCount = await User.find({ userType: "user" }).countDocuments();
+    const users = await User.find({ userType: "user" })
+      .sort({ createdAt: -1 })
+      .skip(Number(currentPage) * pageSize - pageSize)
+      .limit(pageSize);
 
-    res.status(200).json(users);
+    const totalPages = Math.ceil(uCount / pageSize);
+    const itemsBeforeLastPage = (totalPages - 1) * pageSize;
+    const lastPageItemsCount = uCount - itemsBeforeLastPage;
+    const skip = currentPage * pageSize;
+    const nextPageCount =
+      skip > uCount ? 0 : uCount - skip > pageSize ? pageSize : uCount - skip;
+
+    const meta = {
+      currentPage: Number(currentPage),
+      totalPages,
+      totalCount: uCount,
+      nextPageCount: Number(nextPageCount),
+      prevPageCount: Number(pageSize),
+      lastPageItemsCount: Number(lastPageItemsCount),
+    };
+
+    res.status(200).json({ users, meta });
   } catch (error) {
     console.error("Error fetching users:", error);
-    res.status(500).json({ error: "Somethig went wrong" });
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
