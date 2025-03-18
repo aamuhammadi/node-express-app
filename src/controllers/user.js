@@ -158,6 +158,8 @@ exports.getAllUsers = async (req, res) => {
         .json({ error: "Permission denied. Only admin can access this." });
     }
 
+    // this is comment for github learning
+
     const uCount = await User.find({ userType: "user" }).countDocuments();
     const users = await User.find({ userType: "user" })
       .sort({ createdAt: -1 })
